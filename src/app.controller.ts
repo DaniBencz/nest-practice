@@ -6,39 +6,48 @@ import {
   Post,
   Put,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { AppService } from './app.service';
-import type { CreateHelloDto } from './dto/hello.dto';
+import type { UserDto } from './dto/user.dto';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService) {
+    // property assignment is done by TypeScript automatically
+    // no need for:
+    // this.appService = appService;
+    // Requires an access modifier (private, public, or protected)
+  }
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  getUsers(@Query() query: { age?: string }): UserDto[] {
+    if (query.age) {
+      return this.appService.getUsers(+query.age);
+    }
+    return this.appService.getUsers();
   }
 
   @Get(':id')
-  getId(@Param('id') id: string): string {
-    return this.appService.getId(id);
+  getId(@Param('id') id: string): UserDto | { message: string } {
+    return this.appService.getId(+id);
   }
 
   @Post()
-  createHello(@Body() createHelloDto: CreateHelloDto): string {
-    return `${createHelloDto.name} is created!`;
+  createUser(@Body() UserDto: UserDto): UserDto {
+    return this.appService.createUser(UserDto);
   }
 
   @Put(':id')
-  updateHello(
+  updateUser(
     @Param('id') id: string,
-    @Body() updateHelloDto: CreateHelloDto,
-  ): string {
-    return `Hello with ID ${id} is updated to ${updateHelloDto.name}`;
+    @Body() updateUserDto: UserDto,
+  ): UserDto | { message: string } {
+    return this.appService.updateUser({ ...updateUserDto, id: +id });
   }
 
   @Delete(':id')
-  deleteHello(@Param('id') id: string): string {
-    return `Hello with ID ${id} is deleted!`;
+  deleteUser(@Param('id') id: string): { message: string } {
+    return this.appService.deleteUser(+id);
   }
 }

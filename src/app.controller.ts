@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   Query,
+  NotFoundException,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import type { UserDto } from './dto/user.dto';
@@ -22,15 +23,23 @@ export class AppController {
 
   @Get()
   getUsers(@Query() query: { age?: string }): UserDto[] {
-    if (query.age) {
-      return this.appService.getUsers(+query.age);
+    try {
+      if (query.age) {
+        return this.appService.getUsers(+query.age);
+      }
+      return this.appService.getUsers();
+    } catch (error: unknown) {
+      throw new NotFoundException((error as Error).message);
     }
-    return this.appService.getUsers();
   }
 
   @Get(':id')
   getId(@Param('id') id: string): UserDto | { message: string } {
-    return this.appService.getId(+id);
+    try {
+      return this.appService.getId(+id);
+    } catch (error: unknown) {
+      throw new NotFoundException((error as Error).message);
+    }
   }
 
   @Post()
@@ -43,11 +52,19 @@ export class AppController {
     @Param('id') id: string,
     @Body() updateUserDto: UserDto,
   ): UserDto | { message: string } {
-    return this.appService.updateUser({ ...updateUserDto, id: +id });
+    try {
+      return this.appService.updateUser({ ...updateUserDto, id: +id });
+    } catch (error: unknown) {
+      throw new NotFoundException((error as Error).message);
+    }
   }
 
   @Delete(':id')
   deleteUser(@Param('id') id: string): { message: string } {
-    return this.appService.deleteUser(+id);
+    try {
+      return this.appService.deleteUser(+id);
+    } catch (error: unknown) {
+      throw new NotFoundException((error as Error).message);
+    }
   }
 }

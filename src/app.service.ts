@@ -10,14 +10,21 @@ export class AppService {
 
   getUsers(age?: number): UserDto[] {
     if (age) {
-      return this.users.filter((user) => user.age === age);
+      const res = this.users.filter((user) => user.age === age);
+      if (res.length > 0) {
+        return res;
+      }
+      throw new Error('No users found with the specified age');
     }
     return this.users;
   }
 
-  getId(id: number): UserDto | { message: string } {
+  getId(id: number): UserDto {
     const user = this.users.find((user) => user.id === id);
-    return user ? user : { message: 'User not found' };
+    if (user) {
+      return user;
+    }
+    throw new Error('No user found with the specified ID');
   }
 
   createUser(UserDto: UserDto): UserDto {
@@ -30,7 +37,7 @@ export class AppService {
     return newUser;
   }
 
-  updateUser(UserDto: UserDto): UserDto | { message: string } {
+  updateUser(UserDto: UserDto): UserDto {
     const userIndex = this.users.findIndex((user) => user.id === UserDto.id);
     if (userIndex !== -1) {
       this.users[userIndex].name = UserDto.name;
@@ -39,7 +46,7 @@ export class AppService {
         : this.users[userIndex].age;
       return this.users[userIndex];
     }
-    return { message: 'User not found' };
+    throw new Error('No user found with the specified ID');
   }
 
   deleteUser(id: number): { message: string } {
@@ -48,6 +55,6 @@ export class AppService {
       this.users.splice(userIndex, 1);
       return { message: 'User deleted' };
     }
-    return { message: 'User not found' };
+    throw new Error('No user found with the specified ID');
   }
 }

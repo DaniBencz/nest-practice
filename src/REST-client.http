@@ -1,0 +1,32 @@
+# used by VSCode REST Client Plugin
+# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+
+### Fetch all users
+get http://localhost:3000/users
+
+### Fetch users by age
+get http://localhost:3000/users?age=25
+
+### Fetch a user by ID
+get http://localhost:3000/users/4
+
+### Create a new user
+post http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "age": 30
+}
+
+### Update a user
+put http://localhost:3000/users/4
+Content-Type: application/json
+
+{
+  "name": "Jane Doe",
+  "age": 25
+}
+
+### Delete a user
+delete http://localhost:3000/users/4

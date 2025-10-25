@@ -7,11 +7,12 @@ import {
   Put,
   Delete,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import type { UserDto } from './dto/user.dto';
 
-@Controller()
+@Controller('users')
 export class AppController {
   constructor(private readonly appService: AppService) {
     // property assignment is done by TypeScript automatically
@@ -20,13 +21,15 @@ export class AppController {
     // Requires an access modifier (private, public, or protected)
   }
 
-  @Get('/users')
-  getUsers(@Query('age') age?: number): UserDto[] {
+  @Get()
+  getUsers(
+    @Query('age', new ParseIntPipe({ optional: true })) age?: number,
+  ): UserDto[] {
     return this.appService.getUsers(age);
   }
 
-  @Get('/user/:id')
-  getId(@Param('id') id: number): UserDto {
+  @Get(':id')
+  getId(@Param('id', ParseIntPipe) id: number): UserDto {
     return this.appService.getId(id);
   }
 
@@ -37,14 +40,14 @@ export class AppController {
 
   @Put(':id')
   updateUser(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UserDto,
-  ): UserDto | { message: string } {
-    return this.appService.updateUser({ ...updateUserDto, id: +id });
+  ): UserDto | { message: string; } {
+    return this.appService.updateUser({ ...updateUserDto, id });
   }
 
   @Delete(':id')
-  deleteUser(@Param('id') id: string): { message: string } {
-    return this.appService.deleteUser(+id);
+  deleteUser(@Param('id', ParseIntPipe) id: number): { message: string; } {
+    return this.appService.deleteUser(id);
   }
 }

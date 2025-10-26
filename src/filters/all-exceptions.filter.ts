@@ -3,6 +3,7 @@ import {
   Catch,
   ArgumentsHost,
   HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import type { Response } from 'express';
 
@@ -20,6 +21,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
           message: exception.message,
           timestamp: new Date().toISOString(),
         });
+      }
+
+      if (exception instanceof HttpException) {
+        return res.json(exception.getResponse());
       }
     }
 

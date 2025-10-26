@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { UserDto } from './dto/user.dto';
+import { UserDto } from './dto/user.dto';
 @Injectable()
 export class AppService {
   private users: UserDto[] = [
@@ -27,11 +27,11 @@ export class AppService {
     throw new Error('No user found with the specified ID');
   }
 
-  createUser(UserDto: UserDto): UserDto {
+  createUser(userDto: UserDto): UserDto {
     const newUser: UserDto = {
       id: this.users.length + 1,
-      name: UserDto.name,
-      age: UserDto.age ? UserDto.age : 30,
+      name: userDto.name,
+      age: userDto.age ?? 30,
     };
     this.users.push(newUser);
     return newUser;

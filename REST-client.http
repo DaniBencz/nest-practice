@@ -15,8 +15,15 @@ post http://localhost:3000/users
 Content-Type: application/json
 
 {
-  "name": "John Doe",
-  "age": 30
+  "name": "John Doe"
+}
+
+### Create a new user with invalid name
+post http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "name": 4
 }
 
 ### Update a user

@@ -8,9 +8,10 @@ import {
   Delete,
   Query,
   ParseIntPipe,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AppService } from './app.service';
-import type { UserDto } from './dto/user.dto';
+import { UserDto } from './dto/user.dto';
 
 @Controller('users')
 export class AppController {
@@ -34,8 +35,9 @@ export class AppController {
   }
 
   @Post()
-  createUser(@Body() UserDto: UserDto): UserDto {
-    return this.appService.createUser(UserDto);
+  // ValidationPipe makes use of the class-validator decorators in UserDto
+  createUser(@Body(new ValidationPipe()) userDto: UserDto): UserDto {
+    return this.appService.createUser(userDto);
   }
 
   @Put(':id')

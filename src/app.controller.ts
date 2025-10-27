@@ -9,9 +9,11 @@ import {
   Query,
   ParseIntPipe,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { UserDto } from './dto/user.dto';
+import { AdminGuard } from './admin/admin.guard';
 
 @Controller('users')
 export class AppController {
@@ -41,15 +43,16 @@ export class AppController {
   }
 
   @Put(':id')
+  @UseGuards(AdminGuard)
   updateUser(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UserDto,
-  ): UserDto | { message: string; } {
+  ): UserDto | { message: string } {
     return this.appService.updateUser({ ...updateUserDto, id });
   }
 
   @Delete(':id')
-  deleteUser(@Param('id', ParseIntPipe) id: number): { message: string; } {
+  deleteUser(@Param('id', ParseIntPipe) id: number): { message: string } {
     return this.appService.deleteUser(id);
   }
 }

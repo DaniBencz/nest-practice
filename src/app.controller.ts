@@ -17,28 +17,29 @@ import { AdminGuard } from './admin/admin.guard';
 
 @Controller('users')
 export class AppController {
+  // Requires an access modifier (private, public, or protected)
   constructor(private readonly appService: AppService) {
     // property assignment is done by TypeScript automatically
     // no need for:
     // this.appService = appService;
-    // Requires an access modifier (private, public, or protected)
   }
 
   @Get()
   getUsers(
+    // ParseIntPipe converts 'age' query param (string) to number
     @Query('age', new ParseIntPipe({ optional: true })) age?: number,
-  ): UserDto[] {
+  ): Promise<UserDto[]> {
     return this.appService.getUsers(age);
   }
 
   @Get(':id')
-  getId(@Param('id', ParseIntPipe) id: number): UserDto {
+  getId(@Param('id', ParseIntPipe) id: number): Promise<UserDto> {
     return this.appService.getId(id);
   }
 
   @Post()
   // ValidationPipe makes use of the class-validator decorators in UserDto
-  createUser(@Body(new ValidationPipe()) userDto: UserDto): UserDto {
+  createUser(@Body(new ValidationPipe()) userDto: UserDto): Promise<UserDto> {
     return this.appService.createUser(userDto);
   }
 
@@ -47,12 +48,14 @@ export class AppController {
   updateUser(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UserDto,
-  ): UserDto | { message: string } {
+  ): Promise<UserDto> | { message: string } {
     return this.appService.updateUser({ ...updateUserDto, id });
   }
 
   @Delete(':id')
-  deleteUser(@Param('id', ParseIntPipe) id: number): { message: string } {
+  deleteUser(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<{ message: string }> {
     return this.appService.deleteUser(id);
   }
 }

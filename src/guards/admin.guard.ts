@@ -13,6 +13,8 @@ export class AdminGuard implements CanActivate {
     // without type assertion, ESLint gives:
     // `Unsafe assignment of an `any` value`
     const body = request.body as UserDto;
+
+    // if true is returned, the request is allowed to proceed
     return body.admin === true;
   }
 }

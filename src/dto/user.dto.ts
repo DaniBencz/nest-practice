@@ -1,4 +1,4 @@
-import { /*IsOptional,*/ IsString, MinLength } from 'class-validator';
+import { IsOptional, IsBoolean, IsString, MinLength } from 'class-validator';
 
 export class UserDto {
   @IsString()
@@ -9,5 +9,8 @@ export class UserDto {
 
   // @IsOptional()
   age?: number;
+
+  @IsBoolean()
+  @IsOptional()
   admin?: boolean;
 }

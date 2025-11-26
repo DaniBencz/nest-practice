@@ -7,6 +7,9 @@ get http://localhost:3000/users
 ### Get users by age
 get http://localhost:3000/users?age=25
 
+### Get users by negative age
+get http://localhost:3000/users?age=-25
+
 ### Get a user by ID
 get http://localhost:3000/users/4
 

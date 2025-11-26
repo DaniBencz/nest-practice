@@ -13,7 +13,8 @@ import {
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { UserDto } from './dto/user.dto';
-import { AdminGuard } from './admin/admin.guard';
+import { AdminGuard } from './guards/admin.guard';
+import { IsPositivePipe } from './pipes/is-positive.pipe';
 
 @Controller('users')
 export class AppController {
@@ -27,7 +28,8 @@ export class AppController {
   @Get()
   getUsers(
     // ParseIntPipe converts 'age' query param (string) to number
-    @Query('age', new ParseIntPipe({ optional: true })) age?: number,
+    @Query('age', new ParseIntPipe({ optional: true }), new IsPositivePipe())
+    age?: number,
   ): Promise<UserDto[]> {
     return this.appService.getUsers(age);
   }
@@ -47,6 +49,7 @@ export class AppController {
   @UseGuards(AdminGuard)
   updateUser(
     @Param('id', ParseIntPipe) id: number,
+    // body validation is skipped here to allow partial updates (e.g. only age)
     @Body() updateUserDto: UserDto,
   ): Promise<UserDto> | { message: string } {
     return this.appService.updateUser({ ...updateUserDto, id });

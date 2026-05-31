@@ -40,8 +40,11 @@ export class AppController {
   }
 
   @Post()
-  // ValidationPipe makes use of the class-validator decorators in UserDto
-  createUser(@Body(new ValidationPipe()) userDto: UserDto): Promise<UserDto> {
+  createUser(
+    // ValidationPipe makes use of the class-validator decorators in UserDto
+    @Body(new ValidationPipe())
+    userDto: UserDto,
+  ): Promise<UserDto> {
     return this.appService.createUser(userDto);
   }
 

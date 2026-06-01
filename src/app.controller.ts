@@ -35,7 +35,10 @@ export class AppController {
   }
 
   @Get(':id')
-  getId(@Param('id', ParseIntPipe) id: number): Promise<UserDto> {
+  getId(
+    @Param('id', ParseIntPipe)
+    id: number,
+  ): Promise<UserDto> {
     return this.appService.getId(id);
   }
 
@@ -51,16 +54,19 @@ export class AppController {
   @Put(':id')
   @UseGuards(AdminGuard)
   updateUser(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe)
+    id: number,
     // body validation is skipped here to allow partial updates (e.g. only age)
-    @Body() updateUserDto: UserDto,
+    @Body()
+    updateUserDto: UserDto,
   ): Promise<UserDto> | { message: string } {
     return this.appService.updateUser({ ...updateUserDto, id });
   }
 
   @Delete(':id')
   deleteUser(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe)
+    id: number,
   ): Promise<{ message: string }> {
     return this.appService.deleteUser(id);
   }

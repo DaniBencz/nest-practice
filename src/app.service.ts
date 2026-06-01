@@ -1,13 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { UserDto } from './dto/user.dto';
 
+const SEED_USERS: UserDto[] = [
+  { id: 1, name: 'Alice', age: 30 },
+  { id: 2, name: 'Bob', age: 25 },
+  { id: 3, name: 'Charlie', age: 35 },
+];
+
 @Injectable()
 export class AppService {
-  private users: UserDto[] = [
-    { id: 1, name: 'Alice', age: 30 },
-    { id: 2, name: 'Bob', age: 25 },
-    { id: 3, name: 'Charlie', age: 35 },
-  ];
+  private users: UserDto[];
+
+  constructor(initialUsers: UserDto[] = [...SEED_USERS]) {
+    this.users = initialUsers;
+  }
 
   async getUsers(age?: number): Promise<UserDto[]> {
     if (age) {
